@@ -1,4 +1,4 @@
-### build and deploy
-mvn jetty:run
+ToDo
+====
 
-### REST requests
+ToDO Web App for Toptal
