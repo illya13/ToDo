@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:mongo="http://www.springframework.org/schema/data/mongo"
-       xsi:schemaLocation="http://www.springframework.org/schema/data/mongo
-        http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd
-        http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd">
 
-    <mongo:mongo host="localhost" port="27017" />
-    <mongo:db-factory id="mongoDbFactory" dbname="todo"/>
+    <mongo:mongo id="mongo" host="${mongo.host}" port="${mongo.port}"/>
+    <mongo:db-factory id="mongoDbFactory" dbname="${mongo.db}" mongo-ref="mongo"/>
+    <mongo:template id="mongoTemplate" db-factory-ref="mongoDbFactory"/>
 
-    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-        <constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
-    </bean>
+    <mongo:repositories base-package="toptal.todo.mongo" mongo-template-ref="mongoTemplate"/>
 </beans>

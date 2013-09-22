@@ -6,6 +6,7 @@ import org.eclipse.jetty.server.bio.SocketConnector;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import toptal.todo.domain.User;
 
@@ -28,6 +29,13 @@ public class BaseControllerITest {
         startJetty();
 
         RestTemplate restTemplate = new RestTemplate();
+
+        try {
+            restTemplate.getForObject(getRestEndpoint("user", expectedUser.getNickname(), "?token={token}"),
+                    User.class, expectedToken);
+        } catch (HttpServerErrorException e) {
+            restTemplate.postForObject(getRestEndpoint("user"), expectedUser, User.class);
+        }
         expectedToken = restTemplate.getForObject(getRestEndpoint("user", "login", "?nickname={nickname}&password={password}"),
                 String.class, expectedUser.getNickname(), expectedUser.getPassword());
     }

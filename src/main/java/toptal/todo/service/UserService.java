@@ -1,7 +1,10 @@
 package toptal.todo.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import toptal.todo.domain.User;
+import toptal.todo.mongo.UserRepository;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -10,52 +13,38 @@ import java.util.Map;
 
 @Service
 public class UserService {
-    private Map<String, User> db;
-
-    public UserService() {
-        db = new HashMap<String, User>();
-        initWithRoot();
-    }
-
-    private void initWithRoot() {
-        User.Builder builder = new User.Builder();
-        User root = builder.newUser("root").setPassword("qwerty").
-                setFullname("Root").
-                build();
-        db.put(root.getNickname(), root);
-    }
+    @Autowired
+    UserRepository userRepository;
 
     public User auth(String nickname, String password) {
-        if (!db.containsKey(nickname))
+        User user = userRepository.findOne(nickname);
+
+        if (user == null)
             throw notFound(nickname);
-        User user = db.get(nickname);
         if (!user.getPassword().equals(password))
             throw badUserPassword(nickname);
         return user;
     }
 
     public User getUserByNickname(String nickname) {
-        if (!db.containsKey(nickname))
+        User user = userRepository.findOne(nickname);
+        if (user == null)
             throw notFound(nickname);
-        return db.get(nickname);
-    }
-
-    public List<User> getAllUsers() {
-        List<User> users = new LinkedList<User>(db.values());
-        return users;
-    }
-
-    public User createUser(User user) {
-        if (db.containsKey(user.getNickname()))
-            throw alreadyExists(user.getNickname());
-        db.put(user.getNickname(), user);
         return user;
     }
 
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public User createUser(User user) {
+        if(userRepository.findOne(user.getNickname()) != null)
+            throw alreadyExists(user.getNickname());
+        return userRepository.save(user);
+    }
+
     public void deleteUserByNickname(String nickname) {
-        if (!db.containsKey(nickname))
-            throw notFound(nickname);
-        db.remove(nickname);
+        userRepository.delete(nickname);
     }
 
     private IllegalArgumentException notFound(String nickname) {

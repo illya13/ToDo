@@ -1,6 +1,7 @@
 package toptal.todo.rest.integration;
 
 import junit.framework.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,8 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import toptal.todo.domain.User;
 
-@ContextConfiguration(locations = {"classpath:spring/rest-client-context.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration
 public class UserControllerITest extends BaseControllerITest {
     @Autowired
     RestTemplate restTemplate;
