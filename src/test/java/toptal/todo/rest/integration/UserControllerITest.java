@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import toptal.todo.domain.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration
+@ContextConfiguration("classpath:toptal/todo/rest/integration/IntegrationTest-context.xml")
 public class UserControllerITest extends BaseControllerITest {
     @Autowired
     RestTemplate restTemplate;

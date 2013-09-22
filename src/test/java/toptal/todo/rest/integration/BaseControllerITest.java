@@ -8,7 +8,10 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
+import toptal.todo.domain.TodoItem;
 import toptal.todo.domain.User;
+
+import java.util.Date;
 
 public class BaseControllerITest {
     private static int port = 7900;
@@ -16,6 +19,7 @@ public class BaseControllerITest {
     private static Server server;
 
     protected static User expectedUser;
+    protected static TodoItem expectedItem;
     protected static String expectedToken;
 
     @BeforeClass
@@ -25,6 +29,12 @@ public class BaseControllerITest {
                 setFullname("Full Name").
                 build();
 
+        expectedItem = new TodoItem();
+        expectedItem.setUser(expectedUser);
+        expectedItem.setTitle("title");
+        expectedItem.setDescription("description");
+        expectedItem.setPriority(1);
+        expectedItem.setDate(new Date());
 
         startJetty();
 

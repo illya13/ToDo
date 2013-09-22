@@ -1,14 +1,10 @@
 package toptal.todo.service;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import toptal.todo.domain.Session;
 import toptal.todo.domain.User;
 import toptal.todo.mongo.SessionRepository;
-import toptal.todo.mongo.UserRepository;
-
-import java.util.*;
 
 @Service
 public class SessionService {
@@ -32,8 +28,7 @@ public class SessionService {
     }
 
     public void validateToken(String token) {
-        ObjectId objectId = new ObjectId(token);
-        Session session = sessionRepository.findOne(objectId);
+        Session session = sessionRepository.findOne(token);
         if (session == null)
             throw notAuth();
 
@@ -47,8 +42,7 @@ public class SessionService {
     }
 
     public void invalidateToken(String token) {
-        ObjectId objectId = new ObjectId(token);
-        sessionRepository.delete(objectId);
+        sessionRepository.delete(token);
     }
 
     private IllegalArgumentException notAuth() {

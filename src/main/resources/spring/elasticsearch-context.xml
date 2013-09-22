@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean id="transportClient" class="org.elasticsearch.client.transport.TransportClient"/>
+
+    <bean id="inetSocketTransportAddress" class="org.elasticsearch.common.transport.InetSocketTransportAddress">
+        <constructor-arg value="${es.host}"/>
+        <constructor-arg value="${es.port}"/>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject">
+            <ref local="transportClient"/>
+        </property>
+        <property name="targetMethod" value="addTransportAddress"/>
+        <property name="arguments">
+            <list>
+                <ref local="inetSocketTransportAddress"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="indexName" class="java.lang.String">
+        <constructor-arg value="${es.index}"/>
+    </bean>
+</beans>

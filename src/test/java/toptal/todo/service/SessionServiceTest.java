@@ -1,6 +1,5 @@
 package toptal.todo.service;
 
-import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +11,6 @@ import toptal.todo.domain.User;
 import toptal.todo.mongo.SessionRepository;
 
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -53,7 +51,7 @@ public class SessionServiceTest {
 
     @Test
     public void validateTokenOkTest() {
-        given(sessionRepository.findOne(new ObjectId(expectedToken))).willReturn(expectedSession);
+        given(sessionRepository.findOne(expectedToken)).willReturn(expectedSession);
 
         // when
         sessionService.validateToken(expectedToken);
@@ -68,7 +66,7 @@ public class SessionServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void invalidateTokenTest() {
-        willDoNothing().given(sessionRepository).delete(new ObjectId(expectedToken));
+        willDoNothing().given(sessionRepository).delete(expectedToken);
 
         // when
         sessionService.invalidateToken(expectedToken);
