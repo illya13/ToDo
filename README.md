@@ -13,6 +13,7 @@ Dependencies:
 Runtime Requirements:
 =====================
 - Java 6
+- Web Container (tested with Jetty 8.1.x)
 - MongoDB 2.4.x [http://localhost:27017/](http://localhost:27017/)
 - ElasticSearch 0.90.5 [http://localhost:9300/](http://localhost:9300/)
 
