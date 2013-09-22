@@ -32,9 +32,9 @@ public class UserController {
 
     @RequestMapping(value = "/user/login", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public String login(@RequestParam String id, @RequestParam String password) {
-        logger.info("login, id=" + id + ", password="+password);
-        User user = userService.auth(id, password);
+    public String login(@RequestParam String nickname, @RequestParam String password) {
+        logger.info("login, nickname=" + nickname + ", password="+password);
+        User user = userService.auth(nickname, password);
         return sessionService.generateToken(user.getNickname());
     }
 
@@ -45,12 +45,12 @@ public class UserController {
         sessionService.invalidateToken(token);
     }
 
-    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/user/{nickname}", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public User getUserById(@PathVariable String id, @RequestParam String token) {
-        logger.info("getUserById, id=" + id + "token="+token);
+    public User getUserById(@PathVariable String nickname, @RequestParam String token) {
+        logger.info("getUserById, nickname=" + nickname + "token="+token);
         sessionService.validateToken(token);
-        return userService.getUserById(id);
+        return userService.getUserById(nickname);
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.GET, produces = "application/json")
@@ -61,11 +61,11 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/user/{nickname}", method = RequestMethod.DELETE)
     @ResponseBody
-    public void deleteUserById(@PathVariable String id, @RequestParam String token) {
-        logger.info("deleteUserById, id=" + id + ", token="+token);
+    public void deleteUserById(@PathVariable String nickname, @RequestParam String token) {
+        logger.info("deleteUserById, nickname=" + nickname + ", token="+token);
         sessionService.validateToken(token);
-        userService.deleteUserById(id);
+        userService.deleteUserById(nickname);
     }
 }

@@ -28,7 +28,7 @@ public class BaseControllerITest {
         startJetty();
 
         RestTemplate restTemplate = new RestTemplate();
-        expectedToken = restTemplate.getForObject(getRestEndpoint("user", "login", "?id={id}&password={password}"),
+        expectedToken = restTemplate.getForObject(getRestEndpoint("user", "login", "?nickname={nickname}&password={password}"),
                 String.class, expectedUser.getNickname(), expectedUser.getPassword());
     }
 
