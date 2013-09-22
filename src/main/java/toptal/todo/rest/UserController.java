@@ -35,7 +35,7 @@ public class UserController {
     public String login(@RequestParam String nickname, @RequestParam String password) {
         logger.info("login, nickname=" + nickname + ", password="+password);
         User user = userService.auth(nickname, password);
-        return sessionService.generateToken(user.getNickname());
+        return sessionService.generateToken(user);
     }
 
     @RequestMapping(value = "/user/logout", method = RequestMethod.GET, produces = "application/json")

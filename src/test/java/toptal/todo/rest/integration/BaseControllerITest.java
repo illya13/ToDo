@@ -31,13 +31,13 @@ public class BaseControllerITest {
         RestTemplate restTemplate = new RestTemplate();
 
         try {
-            restTemplate.getForObject(getRestEndpoint("user", expectedUser.getNickname(), "?token={token}"),
-                    User.class, expectedToken);
+            expectedToken = restTemplate.getForObject(getRestEndpoint("user", "login", "?nickname={nickname}&password={password}"),
+                    String.class, expectedUser.getNickname(), expectedUser.getPassword());
         } catch (HttpServerErrorException e) {
             restTemplate.postForObject(getRestEndpoint("user"), expectedUser, User.class);
+            expectedToken = restTemplate.getForObject(getRestEndpoint("user", "login", "?nickname={nickname}&password={password}"),
+                    String.class, expectedUser.getNickname(), expectedUser.getPassword());
         }
-        expectedToken = restTemplate.getForObject(getRestEndpoint("user", "login", "?nickname={nickname}&password={password}"),
-                String.class, expectedUser.getNickname(), expectedUser.getPassword());
     }
 
     @AfterClass

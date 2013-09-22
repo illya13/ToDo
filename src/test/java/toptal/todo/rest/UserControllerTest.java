@@ -52,7 +52,7 @@ public class UserControllerTest {
     @Test
     public void loginOkTest() {
         given(userService.auth(expectedUser.getNickname(), expectedUser.getPassword())).willReturn(expectedUser);
-        given(sessionService.generateToken(expectedUser.getNickname())).willReturn(expectedToken);
+        given(sessionService.generateToken(expectedUser)).willReturn(expectedToken);
 
         //when
         String token = userConstroller.login(expectedUser.getNickname(), expectedUser.getPassword());
@@ -64,7 +64,7 @@ public class UserControllerTest {
     @Test(expected = IllegalArgumentException.class)
     public void loginFailedTest() {
         given(userService.auth(expectedUser.getNickname(), expectedUser.getPassword())).willThrow(new IllegalArgumentException());
-        given(sessionService.generateToken(expectedUser.getNickname())).willReturn(expectedToken);
+        given(sessionService.generateToken(expectedUser)).willReturn(expectedToken);
 
         //when
         userConstroller.login(expectedUser.getNickname(), expectedUser.getPassword());

@@ -1,43 +1,54 @@
 package toptal.todo.service;
 
+import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import toptal.todo.domain.Session;
+import toptal.todo.domain.User;
+import toptal.todo.mongo.SessionRepository;
+import toptal.todo.mongo.UserRepository;
 
 import java.util.*;
 
 @Service
 public class SessionService {
+    @Autowired
+    SessionRepository sessionRepository;
+
     public static final int expireMinutes = 5;
 
-    private Map<String, Long> sessions;
-
     public SessionService() {
-        sessions = new HashMap<String, Long>();
     }
 
-    public String generateToken(String id) {
-        // TODO: think about of using id
-        UUID uuid = UUID.randomUUID();
-        sessions.put(uuid.toString(), System.currentTimeMillis());
-        return uuid.toString();
+    public String generateToken(User user) {
+        Session session = new Session.Builder().newSession(user);
+        session = sessionRepository.save(session);
+        return session.getId().toString();
     }
 
-    public void extendToken(String token) {
-        sessions.put(token, System.currentTimeMillis());
+    private void extendToken(Session session) {
+        session.setExpire(System.currentTimeMillis());
+        sessionRepository.save(session);
     }
 
     public void validateToken(String token) {
-        if (!sessions.containsKey(token))
+        ObjectId objectId = new ObjectId(token);
+        Session session = sessionRepository.findOne(objectId);
+        if (session == null)
             throw notAuth();
 
-        long millis = sessions.get(token);
+        long millis = session.getExpire();
         if (System.currentTimeMillis() - millis > minutesToMillis(expireMinutes)) {
             invalidateToken(token);
             throw notAuth();
         }
+
+        extendToken(session);
     }
 
     public void invalidateToken(String token) {
-        sessions.remove(token);
+        ObjectId objectId = new ObjectId(token);
+        sessionRepository.delete(objectId);
     }
 
     private IllegalArgumentException notAuth() {
