@@ -84,35 +84,35 @@ public class UserControllerTest {
 
 
     @Test
-    public void getUserByIdOkTest() {
-        given(userService.getUserById(expectedUser.getNickname())).willReturn(expectedUser);
+    public void getUserByNicknameOkTest() {
+        given(userService.getUserByNickname(expectedUser.getNickname())).willReturn(expectedUser);
         willDoNothing().given(sessionService).validateToken(expectedToken);
 
         // when
-        User actualUser = userConstroller.getUserById(expectedUser.getNickname(), expectedToken);
+        User actualUser = userConstroller.getUserByNickname(expectedUser.getNickname(), expectedToken);
 
         // then
         assertThat(actualUser, isUserEquals(expectedUser));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void getUserByIdFailed1Test() {
-        given(userService.getUserById(expectedUser.getNickname())).willReturn(expectedUser);
+    public void getUserByNicknameFailed1Test() {
+        given(userService.getUserByNickname(expectedUser.getNickname())).willReturn(expectedUser);
         willThrow(new IllegalArgumentException()).given(sessionService).validateToken(expectedToken);
 
         // when
-        userConstroller.getUserById(expectedUser.getNickname(), expectedToken);
+        userConstroller.getUserByNickname(expectedUser.getNickname(), expectedToken);
 
         // then exception
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void getUserByIdFailed2Test() {
-        given(userService.getUserById(expectedUser.getNickname())).willThrow(new IllegalArgumentException());
+    public void getUserByNicknameFailed2Test() {
+        given(userService.getUserByNickname(expectedUser.getNickname())).willThrow(new IllegalArgumentException());
         willDoNothing().given(sessionService).validateToken(expectedToken);
 
         // when
-        userConstroller.getUserById(expectedUser.getNickname(), expectedToken);
+        userConstroller.getUserByNickname(expectedUser.getNickname(), expectedToken);
 
         // then exception
     }
@@ -129,12 +129,12 @@ public class UserControllerTest {
     }
 
     @Test
-    public void deleteUserByIdTest() {
-        willDoNothing().given(userService).deleteUserById(expectedUser.getNickname());
+    public void deleteUserByNicknameTest() {
+        willDoNothing().given(userService).deleteUserByNickname(expectedUser.getNickname());
         willDoNothing().given(sessionService).validateToken(expectedToken);
 
         // when
-        userConstroller.deleteUserById(expectedUser.getNickname(), expectedToken);
+        userConstroller.deleteUserByNickname(expectedUser.getNickname(), expectedToken);
 
         // then no exception
     }

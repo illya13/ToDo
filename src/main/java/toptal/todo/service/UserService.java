@@ -25,19 +25,19 @@ public class UserService {
         db.put(root.getNickname(), root);
     }
 
-    public User auth(String id, String password) {
-        if (!db.containsKey(id))
-            throw notFound(id);
-        User user = db.get(id);
+    public User auth(String nickname, String password) {
+        if (!db.containsKey(nickname))
+            throw notFound(nickname);
+        User user = db.get(nickname);
         if (!user.getPassword().equals(password))
-            throw badUserPassword(id);
+            throw badUserPassword(nickname);
         return user;
     }
 
-    public User getUserById(String id) {
-        if (!db.containsKey(id))
-            throw notFound(id);
-        return db.get(id);
+    public User getUserByNickname(String nickname) {
+        if (!db.containsKey(nickname))
+            throw notFound(nickname);
+        return db.get(nickname);
     }
 
     public List<User> getAllUsers() {
@@ -52,21 +52,21 @@ public class UserService {
         return user;
     }
 
-    public void deleteUserById(String id) {
-        if (!db.containsKey(id))
-            throw notFound(id);
-        db.remove(id);
+    public void deleteUserByNickname(String nickname) {
+        if (!db.containsKey(nickname))
+            throw notFound(nickname);
+        db.remove(nickname);
     }
 
-    private IllegalArgumentException notFound(String id) {
-        return new IllegalArgumentException(String.format("User with id=%1$s was not found", id));
+    private IllegalArgumentException notFound(String nickname) {
+        return new IllegalArgumentException(String.format("User with nickname=%1$s was not found", nickname));
     }
 
-    private IllegalArgumentException alreadyExists(String id) {
-        return new IllegalArgumentException(String.format("User with id=%1$s already exists", id));
+    private IllegalArgumentException alreadyExists(String nickname) {
+        return new IllegalArgumentException(String.format("User with nickname=%1$s already exists", nickname));
     }
 
-    private IllegalArgumentException badUserPassword(String id) {
-        return new IllegalArgumentException(String.format("Bad user id=%1$s or/and password", id));
+    private IllegalArgumentException badUserPassword(String nickname) {
+        return new IllegalArgumentException(String.format("Bad user nickname=%1$s or/and password", nickname));
     }
 }

@@ -47,10 +47,10 @@ public class UserController {
 
     @RequestMapping(value = "/user/{nickname}", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public User getUserById(@PathVariable String nickname, @RequestParam String token) {
-        logger.info("getUserById, nickname=" + nickname + "token="+token);
+    public User getUserByNickname(@PathVariable String nickname, @RequestParam String token) {
+        logger.info("getUserByNickname, nickname=" + nickname + "token="+token);
         sessionService.validateToken(token);
-        return userService.getUserById(nickname);
+        return userService.getUserByNickname(nickname);
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.GET, produces = "application/json")
@@ -63,9 +63,9 @@ public class UserController {
 
     @RequestMapping(value = "/user/{nickname}", method = RequestMethod.DELETE)
     @ResponseBody
-    public void deleteUserById(@PathVariable String nickname, @RequestParam String token) {
-        logger.info("deleteUserById, nickname=" + nickname + ", token="+token);
+    public void deleteUserByNickname(@PathVariable String nickname, @RequestParam String token) {
+        logger.info("deleteUserByNickname, nickname=" + nickname + ", token="+token);
         sessionService.validateToken(token);
-        userService.deleteUserById(nickname);
+        userService.deleteUserByNickname(nickname);
     }
 }

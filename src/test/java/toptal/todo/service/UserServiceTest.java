@@ -34,13 +34,13 @@ public class UserServiceTest {
     }
 
     @Test
-    public void getUserByIdOkTest() {
-        assertThat(userService.getUserById("root"), is(notNullValue()));
+    public void getUserByNicknameOkTest() {
+        assertThat(userService.getUserByNickname("root"), is(notNullValue()));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void getUserByIdFailedTest() {
-        assertThat(userService.getUserById("root1"), is(notNullValue()));
+    public void getUserByNicknameFailedTest() {
+        assertThat(userService.getUserByNickname("root1"), is(notNullValue()));
     }
 
     @Test
@@ -61,7 +61,7 @@ public class UserServiceTest {
 
         assertThat(userService.getAllUsers(), is(hasSize(size+1)));
 
-        userService.deleteUserById(expected.getNickname());
+        userService.deleteUserByNickname(expected.getNickname());
         assertThat(userService.getAllUsers(), is(hasSize(size)));
     }
 
