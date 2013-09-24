@@ -48,7 +48,7 @@ public class TodoControllerITest extends BaseControllerITest {
 
         response.setDescription("Updated Description");
 
-        TodoItem updatedResponse = restTemplate.postForObject(getRestEndpoint("item", expectedItem.getId(), "?token={token}"),
+        TodoItem updatedResponse = restTemplate.postForObject(getRestEndpoint("item", response.getId(), "?token={token}"),
                 response, TodoItem.class, expectedToken);
 
         Assert.assertNotNull(updatedResponse);
@@ -70,6 +70,14 @@ public class TodoControllerITest extends BaseControllerITest {
     public void testTitleSuggest() throws Exception {
         String[] response = restTemplate.getForObject(getRestEndpoint("item", "suggest")+"?text={text}&token={token}",
                 String[].class, "ti", expectedToken);
+        Assert.assertNotNull(response);
+    }
+
+    @Test
+    public void testFilter() throws Exception {
+        TodoItem[] response = restTemplate.getForObject(getRestEndpoint("item", "filter")+
+                "?text={text}&start={start}&size={size}&token={token}",
+                TodoItem[].class, "update*", 0, 10, expectedToken);
         Assert.assertNotNull(response);
     }
 

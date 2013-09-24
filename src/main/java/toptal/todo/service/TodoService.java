@@ -7,6 +7,7 @@ import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.action.suggest.SuggestResponse;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.suggest.Suggest;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionFuzzyBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,7 +99,12 @@ public class TodoService {
                 setFrom(start).setSize(size).setExplain(true).
                 execute().actionGet();
 
-        return Collections.EMPTY_LIST;
+        // TODO: use   select * from items where id in () order by date, priority
+        List<TodoItem> items = new LinkedList<TodoItem>();
+        for (SearchHit hit: response.getHits())
+            items.add(getTodoItemById(hit.getId()));
+
+        return items;
     }
 
     private void reindex(TodoItem item) throws IOException {
