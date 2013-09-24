@@ -77,7 +77,7 @@ public class TodoControllerITest extends BaseControllerITest {
     public void testFilter() throws Exception {
         TodoItem[] response = restTemplate.getForObject(getRestEndpoint("item", "filter")+
                 "?text={text}&start={start}&size={size}&token={token}",
-                TodoItem[].class, "update*", 0, 10, expectedToken);
+                TodoItem[].class, "*", 0, 10, expectedToken);
         Assert.assertNotNull(response);
     }
 
