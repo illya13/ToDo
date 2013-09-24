@@ -79,10 +79,12 @@ public class TodoController {
 
     @RequestMapping(value = "/item/filter", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public List<TodoItem> filter(@RequestParam String text, @RequestParam int start, @RequestParam int size,
-            @RequestParam String token) {
+    public List<TodoItem> filter(@RequestParam String text,
+                                 @RequestParam int start, @RequestParam int size,
+                                 @RequestParam String sort, @RequestParam String sortBy,
+                                 @RequestParam String token) {
         logger.info("filter, text=" + text + ", start="+start + ", size="+size + ", token="+token);
         sessionService.validateToken(token);
-        return todoService.filter(text, start, size);
+        return todoService.filter(text, start, size, sort, sortBy);
     }
 }

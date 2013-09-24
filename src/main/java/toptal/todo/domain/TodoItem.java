@@ -2,7 +2,7 @@ package toptal.todo.domain;
 
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,7 +12,6 @@ import java.util.Date;
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
 @Document
-@CompoundIndex(def = "{'user':1, 'priority':1, 'date':1}", unique = false)
 public class TodoItem {
     @Id
     private String id;
@@ -24,8 +23,10 @@ public class TodoItem {
 
     private String description;
 
+    @Indexed
     private int priority;
 
+    @Indexed
     private Date date;
 
     private boolean completed;

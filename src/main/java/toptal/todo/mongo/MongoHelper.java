@@ -15,9 +15,10 @@ public class MongoHelper {
     @Autowired
     MongoTemplate mongoTemplate;
 
-    public List<TodoItem> findItemInSorted(List<String> ids) {
+    public List<TodoItem> findItemInSorted(List<String> ids, String sort, String sortBy) {
+        Sort.Direction direction = Sort.Direction.fromString(sort);
         Query query = new Query(Criteria.where("_id").in(ids));
-        query.with(new Sort(Sort.Direction.ASC, "date").and(new Sort(Sort.Direction.ASC, "priority")));
+        query.with(new Sort(direction, sortBy));
         return mongoTemplate.find(query, TodoItem.class);
     }
 }
