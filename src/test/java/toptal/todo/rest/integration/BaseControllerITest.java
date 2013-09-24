@@ -30,6 +30,7 @@ public class BaseControllerITest {
                 build();
 
         expectedItem = new TodoItem();
+        expectedItem.setId("1");
         expectedItem.setUser(expectedUser);
         expectedItem.setTitle("title");
         expectedItem.setDescription("description");

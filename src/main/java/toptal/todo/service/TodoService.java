@@ -2,7 +2,13 @@ package toptal.todo.service;
 
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.search.SearchType;
+import org.elasticsearch.action.suggest.SuggestResponse;
 import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.suggest.Suggest;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestionFuzzyBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import toptal.todo.domain.TodoItem;
@@ -10,6 +16,7 @@ import toptal.todo.mongo.TodoItemRepository;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import static toptal.todo.domain.TodoItem.getXContentBuilder;
@@ -50,7 +57,7 @@ public class TodoService {
         return todoItemRepository.findAll();
     }
 
-    public void updateTodoItem(TodoItem item) {
+    public TodoItem updateTodoItem(TodoItem item) {
         item = todoItemRepository.save(item);
         try {
             reindex(item);
@@ -58,6 +65,7 @@ public class TodoService {
             // do nothing
             throw new IllegalStateException(ioe);
         }
+        return item;
     }
 
     public void deleteTodoItem(String id) {
@@ -68,10 +76,28 @@ public class TodoService {
     }
 
     public List<String> suggestTitles(String text) {
-        return Collections.EMPTY_LIST;
+        SuggestResponse response = transportClient.prepareSuggest(indexName).
+                addSuggestion(new CompletionSuggestionFuzzyBuilder("title").
+                        field("title.completion").text(text).size(5)).execute().actionGet();
+
+        List<String> strings = new LinkedList<String>();
+        for(Suggest.Suggestion.Entry entry: response.getSuggest().getSuggestion("title").getEntries())
+            for(Object object: entry.getOptions()) {
+                Suggest.Suggestion.Entry.Option option = (Suggest.Suggestion.Entry.Option)object;
+                strings.add(option.getText().string());
+            }
+
+        return strings;
     }
 
-    public List<TodoItem> filter(String text) {
+    public List<TodoItem> filter(String text, int start, int size) {
+        SearchResponse response = transportClient.prepareSearch(indexName).
+                setTypes(type).
+                setSearchType(SearchType.DFS_QUERY_THEN_FETCH).
+                setQuery(QueryBuilders.queryString(text)).
+                setFrom(start).setSize(size).setExplain(true).
+                execute().actionGet();
+
         return Collections.EMPTY_LIST;
     }
 
