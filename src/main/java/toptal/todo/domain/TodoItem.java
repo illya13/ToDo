@@ -28,6 +28,8 @@ public class TodoItem {
 
     private Date date;
 
+    private boolean completed;
+
     public String getId() {
         return id;
     }
@@ -74,6 +76,14 @@ public class TodoItem {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 
     public static XContentBuilder getXContentBuilder(TodoItem item) throws IOException {
