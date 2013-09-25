@@ -32,3 +32,37 @@ REST API:
 - **DELETE** [/item/{id}]() - delete ToDo item with *id*
 - **GET** [/item/filter]() - get filtered ToDo items sorted by Date, Priority
 - **GET** [/item/suggest]() - get suggests based on ToDo item Titles
+
+ElasticSearch
+=============
+- mapping for item
+    ```javascript
+{
+  "item" : {
+    "properties" : {
+      "description" : {
+        "type" : "string"
+      },
+      "title" : {
+        "type" : "multi_field",
+        "fields" : {
+          "title" : {
+            "type" : "string"
+          },
+          "completion" : {
+            "type" : "completion",
+            "analyzer" : "simple",
+            "payloads" : false,
+            "preserve_separators" : true,
+            "preserve_position_increments" : true,
+            "max_input_len" : 50
+          }
+        }
+      },
+      "user" : {
+        "type" : "string"
+      }
+    }
+  }
+}
+    ````
