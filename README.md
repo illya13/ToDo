@@ -36,7 +36,7 @@ REST API:
 ElasticSearch
 =============
 - mapping for item
-    ```javascript
+    ````javascript
 {
       "item" : {
           "properties" : {
