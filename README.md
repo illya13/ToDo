@@ -38,31 +38,32 @@ ElasticSearch
 - mapping for item
     ```javascript
 {
-  "item" : {
-    "properties" : {
-      "description" : {
-        "type" : "string"
-      },
-      "title" : {
-        "type" : "multi_field",
-        "fields" : {
-          "title" : {
-            "type" : "string"
-          },
-          "completion" : {
-            "type" : "completion",
-            "analyzer" : "simple",
-            "payloads" : false,
-            "preserve_separators" : true,
-            "preserve_position_increments" : true,
-            "max_input_len" : 50
+      "item" : {
+          "properties" : {
+              "description" : {
+                  "type" : "string"
+              },
+              "title" : {
+                  "type" : "multi_field",
+                  "fields" : {
+                      "title" : {
+                          "type" : "string"
+                      },
+                      "completion" : {
+                          "type" : "completion",
+                          "analyzer" : "simple",
+                          "payloads" : false,
+                          "preserve_separators" : true,
+                          "preserve_position_increments" : true,
+                          "max_input_len" : 50
+                      }
+                  }
+              },
+              "user" : {
+                  "type" : "string"
+              }
           }
-        }
-      },
-      "user" : {
-        "type" : "string"
       }
-    }
-  }
 }
     ````
+
