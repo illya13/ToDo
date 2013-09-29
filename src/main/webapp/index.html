@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="http://www.toptal.com/assets/favicons/favicon-95839ebdb248c7cb07ad86866c782727.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
+    <link href='http://www.toptal.com/assets/favicons/touch_x57-45ec7b0cd5b4b9e10550e8ec2c87312e.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+    <link href='http://www.toptal.com/assets/favicons/touch_x72-06f083faf048cccae046b40a10bc0ef1.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+    <link href='http://www.toptal.com/assets/favicons/touch_x114-f0ce3ee810a344dc43dda9e5d22ae19b.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+    <link href='http://www.toptal.com/assets/favicons/touch_x57-45ec7b0cd5b4b9e10550e8ec2c87312e.png' rel='apple-touch-icon-precomposed'>
+
+    <title>ToDo Web App for Toptal</title>
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.css">
+    <link rel="stylesheet" href="css/hint.css">
+    <link rel="stylesheet" href="css/typeahead.css">
+    <link rel="stylesheet" href="css/signin.css">
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <p class="navbar-brand navbar-brand-active">ToDo</p>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <ul class="nav navbar-nav">
+            <li><a href="#">New Item</a></li>
+        </ul>
+        <form class="navbar-form navbar-left" role="search">
+            <div class="form-group">
+                <input id="search" type="text" class="form-control" placeholder="Pattern">
+            </div>
+            <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+        </form>
+        <ul class="nav navbar-nav navbar-right">
+            <p id="user" class="navbar-text"></p>
+            <li><a id="logout" href="#">Logout</a></li>
+        </ul>
+    </div><!-- /.navbar-collapse -->
+</nav>
+
+<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+    <div class="navbar-header">
+        <p class="navbar-text">ToDo Web App for Toptal
+            <span class="glyphicon glyphicon-copyright-mark"></span>
+            2013, by Illya Havsiyevych</p>
+    </div>
+
+    <ul class="nav navbar-nav navbar-right">
+        <li><a href="https://github.com/illya13/ToDo">GitHub</a></li>
+    </ul>
+</nav>
+
+<div class="bb-alert alert alert-info" style="display:none;">
+    <span>The examples populate this alert with dummy content</span>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" data-backdrop="static" data-keyboard="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form class="form-signin">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Please Sign In</h4>
+            </div>
+            <div class="modal-body">
+                <input id="nickname" type="text" class="form-control" placeholder="Nickname" autofocus>
+                <input id="password" type="password" class="form-control" placeholder="Password">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Sign In</button>
+            </div>
+        </div><!-- /.modal-content -->
+        </form>
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.js"></script>
+<script src="http://twitter.github.io/typeahead.js/releases/latest/typeahead.js"></script>
+<script src="js/bootbox/bootbox.js"></script>
+<script src="js/modal.js"></script>
+
+<script src="js/hint.js"></script>
+<script src="js/todo.js"></script>
+
+</body>
+</html>
