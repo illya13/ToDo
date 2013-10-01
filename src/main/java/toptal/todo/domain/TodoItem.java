@@ -29,7 +29,7 @@ public class TodoItem {
     @Indexed
     private Date date;
 
-    private boolean completed;
+    private boolean completed = false;
 
     public String getId() {
         return id;

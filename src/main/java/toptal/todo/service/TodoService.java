@@ -64,9 +64,9 @@ public class TodoService {
         return esHelper.suggest(text);
     }
 
-    public List<TodoItem> filter(String text, int start, int size, String sort, String sortBy) {
+    public List<TodoItem> filter(String text, Boolean completed, int start, int size, String sort, String sortBy) {
         List<String> ids = esHelper.filter(text, start, size);
-        return mongoHelper.findItemInSorted(ids, sort, sortBy);
+        return mongoHelper.findItemInSorted(ids, completed, sort, sortBy);
     }
 
     private IllegalArgumentException notFound(String id) {

@@ -112,18 +112,27 @@ $(function() {
 
                 token = $.cookie("session");
 
+                var params = {
+                    'text': ((options.search) ? (options.search) : '') +'*',
+                    'start': startIndex,
+                    'size': options.pageSize,
+                    'sort': (options.sortDirection) ? options.sortDirection : 'asc',
+                    'sortBy': (options.sortProperty) ? options.sortProperty : 'date',
+                    'token': token
+                };
+
+                if (options.filter) {
+                    if (options.filter.value == 'completed')
+                        params.completed = true;
+                    if (options.filter.value == 'notCompleted')
+                        params.completed = false;
+                }
+
                 $.ajax({
                     url: "rest/item/filter",
                     async: false,
                     type: "GET",
-                    data: {
-                        'text': ((options.search) ? (options.search) : '') +'*',
-                        'start': startIndex,
-                        'size': options.pageSize,
-                        'sort': (options.sortDirection) ? options.sortDirection : 'asc',
-                        'sortBy': (options.sortProperty) ? options.sortProperty : 'date',
-                        'token': token
-                    },
+                    data: params,
                     accepts: {
                         text: "application/json"
                     },

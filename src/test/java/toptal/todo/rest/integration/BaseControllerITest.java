@@ -36,6 +36,7 @@ public class BaseControllerITest {
         expectedItem.setDescription("description");
         expectedItem.setPriority(1);
         expectedItem.setDate(new Date());
+        expectedItem.setCompleted(false);
 
         startJetty();
 
