@@ -1,18 +1,5 @@
 var token = null;
 
-/*
-function dataSource() {
-    var ds = {}
-    ds.columns = function() {
-        return [id, name];
-    }
-
-    ds.data = function(options, callback) {
-
-    }
-    return ds;
-}
-*/
 $(function() {
     token = $.cookie("session");
     if (token) {
@@ -22,47 +9,6 @@ $(function() {
             name: 'titles',
             remote: 'rest/item/suggest/?text=%QUERY&token='+token
         });
-
-/*
-        var dataSource = {
-            columns: function() {
-                return [
-                    {
-                        property: 'toponymName',
-                        label: 'Name',
-                        sortable: true
-                    },
-                    {
-                        property: 'countrycode',
-                        label: 'Country',
-                        sortable: true
-                    },
-                    {
-                        property: 'population',
-                        label: 'Population',
-                        sortable: true
-                    },
-                    {
-                        property: 'fcodeName',
-                        label: 'Type',
-                        sortable: true
-                    }
-                ];
-            },
-
-            data: function(options, callback) {
-                return sampleData.geonames;
-            }
-        }
-
-        $('#MyGrid').datagrid({ dataSource: dataSource, stretchHeight: true })
-        $('#MyGrid').datagrid('reload');
-
-        $('#datagrid-reload').on('click', function () {
-            $('#MyGrid').datagrid('reload');
-        });
-
-*/
     }
 
     Hint.init({
@@ -106,6 +52,8 @@ $(function() {
                         name: 'titles',
                         remote: 'rest/item/suggest/?text=%QUERY&token='+token
                     });
+
+                    $('#MyGrid').datagrid('reload');
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     Hint.show(errorThrown);
@@ -120,4 +68,100 @@ $(function() {
 
     if (!token)
         $('#myModal').modal('show');
+
+    // INITIALIZING THE DATAGRID
+    var dataSource = {
+        columns: function () {
+            return [
+                {
+                    property: 'priority',
+                    label: 'Priority',
+                    sortable: true
+                },
+                {
+                    property: 'title',
+                    label: 'Title',
+                    sortable: false
+                },
+                {
+                    property: 'date',
+                    label: 'Due Date',
+                    sortable: true
+                },
+                {
+                    property: 'description',
+                    label: 'Description',
+                    sortable: false
+                },
+                {
+                    property: 'completed',
+                    label: 'Completed',
+                    sortable: false
+                }
+            ];
+        },
+        data: function (options, callback) {
+            var self = this;
+
+            setTimeout(function () {
+                var data = $.extend(true, [], self._data);
+
+                // PAGING
+                var startIndex = options.pageIndex * options.pageSize;
+                var endIndex = startIndex + options.pageSize;
+
+                token = $.cookie("session");
+
+                $.ajax({
+                    url: "rest/item/filter",
+                    async: false,
+                    type: "GET",
+                    data: {
+                        'text': ((options.search) ? (options.search) : '') +'*',
+                        'start': startIndex,
+                        'size': options.pageSize,
+                        'sort': (options.sortDirection) ? options.sortDirection : 'asc',
+                        'sortBy': (options.sortProperty) ? options.sortProperty : 'date',
+                        'token': token
+                    },
+                    accepts: {
+                        text: "application/json"
+                    },
+                    contentType:"application/json; charset=utf-8",
+                    dataType:"json",
+                    success: function( items ) {
+                        $.each(items, function(key, value){
+                            items[key].completed = (value.completed) ? 'Yes' : 'No';
+                            var date = new Date(value.date);
+                            items[key].date = date.getFullYear() + " / " +date.getMonth() + " / " + date.getDate();
+                        });
+                        data = items;
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        Hint.show(errorThrown);
+                    }
+                });
+
+                var count = data.length;
+
+                // PAGING
+                var end = (endIndex > count) ? count : endIndex;
+                var pages = Math.ceil(count / options.pageSize);
+                var page = options.pageIndex + 1;
+                var start = startIndex + 1;
+
+                callback({ data: data, start: start, end: end, count: count, pages: pages, page: page });
+
+            }, this._delay)
+        }
+    }
+
+    $('#MyGrid').datagrid({
+        dataSource: dataSource,
+        stretchHeight: true
+    });
+
+    $('#datagrid-reload').on('click', function () {
+        $('#MyGrid').datagrid('reload');
+    });
 });
