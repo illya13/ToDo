@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="css/hint.css">
     <link rel="stylesheet" href="css/typeahead.css">
     <link rel="stylesheet" href="css/signin.css">
+    <link rel="stylesheet" href="css/todo.css">
 </head>
 
 <body>
@@ -68,6 +69,44 @@
     <span>The examples populate this alert with dummy content</span>
 </div>
 
+<div class="container">
+<!-- Main component for a primary marketing message or call to action -->
+<div class="starter-template">
+    <h2 id="tables-striped">ToDo Items</h2>
+    <div class="bs-example">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Priority</th>
+                <th>Title</th>
+                <th>Due Date</th>
+                <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>10</td>
+                <td>Domain Model</td>
+                <td>2013/10/02</td>
+                <td>Create domain model as Java POJOs</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>REST API</td>
+                <td>2013/10/03</td>
+                <td>Implement REST API as Controller in Spring MVC</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Web GUI</td>
+                <td>2013/10/03</td>
+                <td>Implement Web GUI with Bootstrap 3.0 and JavaScript</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div> <!-- /container -->
+
 <!-- Modal -->
 <div class="modal fade" id="myModal" data-backdrop="static" data-keyboard="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -90,9 +129,17 @@
 </div><!-- /.modal -->
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.js"></script>
+<script src="js/jquery.cookie.js"></script>
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.js"></script>
 <script src="http://twitter.github.io/typeahead.js/releases/latest/typeahead.js"></script>
 <script src="js/bootbox/bootbox.js"></script>
+
+<!--
+<script src="js/fuelux/datagrid.js"></script>
+<script src="http://exacttarget.github.io/fuelux/sample/datasource.js"></script>
+<script src="http://exacttarget.github.io/fuelux/sample/data.js"></script>
+-->
+
 <script src="js/modal.js"></script>
 
 <script src="js/hint.js"></script>
