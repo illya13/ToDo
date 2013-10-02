@@ -2,10 +2,13 @@ package toptal.todo.elasticsearch;
 
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.action.suggest.SuggestResponse;
 import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.index.query.FilterBuilder;
+import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.suggest.Suggest;
@@ -50,12 +53,14 @@ public class ESHelper {
         return strings;
     }
 
-    public List<String> filter(String text, int start, int size) {
-        SearchResponse response = transportClient.prepareSearch(indexName).
+    public List<String> filter(String text, Boolean completed, int start, int size) {
+        SearchRequestBuilder builder = transportClient.prepareSearch(indexName).
                 setTypes(type).
                 setSearchType(SearchType.DFS_QUERY_THEN_FETCH).
-                setQuery(QueryBuilders.queryString(text)).
-                setFrom(start).setSize(size).setExplain(true).
+                setQuery(QueryBuilders.queryString(text));
+        if (completed != null)
+            builder.setFilter(FilterBuilders.termFilter("completed", completed));
+        SearchResponse response = builder.setFrom(start).setSize(size).setExplain(true).
                 execute().actionGet();
 
         List<String> ids = new LinkedList<String>();

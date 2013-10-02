@@ -14,8 +14,6 @@
 
 <link href="css/fuelux.css" rel="stylesheet">
 <link href="css/hint.css" rel="stylesheet">
-<link href="css/signin.css" rel="stylesheet">
-<link href="css/typeahead.css" rel="stylesheet">
 <link href="css/todo.css" rel="stylesheet">
 
 <script src="js/require.js"></script>
@@ -24,10 +22,11 @@
     requirejs.config({ baseUrl: 'js', paths: { 'sample': 'sample' } });
 </script>
 
-
 <script>
 
-require(['jquery', 'jquery.cookie', 'fuelux/all', 'modal', 'hint', 'todo']);
+require(['jquery', 'jquery.cookie', 'fuelux/all', 'hint', 'todo'], function() {
+    todo.init();
+});
 </script>
 
 </head>
@@ -72,11 +71,11 @@ require(['jquery', 'jquery.cookie', 'fuelux/all', 'modal', 'hint', 'todo']);
             <thead>
             <tr>
                 <th>
-                    <span class="datagrid-header-title">Geographic Data Sample</span>
+                    <span class="datagrid-header-title"></span>
 
                     <div class="datagrid-header-left">
                         <div class="input-append search datagrid-search">
-                            <input type="text" class="input-medium" placeholder="Search">
+                            <input id="search" type="text" class="input-medium" data-provide="typeahead" autocomplete="off" placeholder="Search">
                             <button type="button" class="btn"><i class="icon-search"></i></button>
                         </div>
                     </div>
@@ -157,26 +156,18 @@ require(['jquery', 'jquery.cookie', 'fuelux/all', 'modal', 'hint', 'todo']);
     <span>The examples populate this alert with dummy content</span>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="myModal" data-backdrop="static" data-keyboard="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <form class="form-signin">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Please Sign In</h4>
-                </div>
-                <div class="modal-body">
-                    <input id="nickname" type="text" class="form-control" placeholder="Nickname" autofocus>
-                    <input id="password" type="password" class="form-control" placeholder="Password">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Sign In</button>
-                </div>
-            </div><!-- /.modal-content -->
-        </form>
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+    <div id="myModal" class="modal hide fade" style="width: 250px; margin-left: -130px;" data-backdrop="static" data-keyboard="true">
+        <div class="modal-header">
+            <h3>Please Sign In</h3>
+        </div>
+        <div class="modal-body">
+            <input id="nickname" type="text" class="form-control" placeholder="Nickname" autofocus>
+            <input id="password" type="password" class="form-control" placeholder="Password">
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn btn-primary" data-dismiss="modal">Sign In</a>
+        </div>
+    </div>
 
 </div>
 

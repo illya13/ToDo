@@ -1,176 +1,179 @@
-var token = null;
+var todo = {
+    token: null,
 
-$(function() {
-    token = $.cookie("session");
-    if (token) {
-        $('#user').text($.cookie("user"));
+    init: function () {
+        todo.initTypeahead();
+        todo.initDatagrid();
+        todo.initHint();
+        todo.initLogout();
+        todo.initLogin();
 
-        $('#search').typeahead({
-            name: 'titles',
-            remote: 'rest/item/suggest/?text=%QUERY&token='+token
+        todo.token = $.cookie("session");
+        if (todo.token)
+            todo.setUser($.cookie("user"));
+        else
+            todo.doLogin();
+    },
+
+    doLogin: function() {
+        $('#myModal').modal('show');
+    },
+
+    setUser: function(nickname) {
+        $('#user').text(nickname);
+    },
+
+    initLogout: function() {
+        $("#logout").on("click", function () {
+            $.removeCookie("session");
+            $.removeCookie("user");
+
+            todo.token = null;
+            todo.setUser('');
+
+            todo.doLogin();
         });
-    }
+    },
 
-    Hint.init({
-        "selector": ".bb-alert"
-    });
+    initLogin: function() {
+        $('#myModal').on('hidden.bs.modal', function () {
+            var nickname = $('#nickname').val();
+            var password = $('#password').val();
 
-    $("#logout").on("click", function() {
-        $.removeCookie("session");
-        $.removeCookie("user");
-        token = null;
+            if (nickname && password) {
+                todo.token = todo.ajaxLogin(nickname, password);
+            }
+            if (!todo.token) {
+                Hint.show("Need to Sign In first");
+                $('#myModal').modal('show');
+            }
+        })
+    },
 
-        $('#user').text("");
-        $('#myModal').modal('show');
-    });
+    initHint: function() {
+        Hint.init({
+            "selector": ".bb-alert"
+        });
+    },
 
-    $('#myModal').on('hidden.bs.modal', function () {
-        var nickname = $('#nickname').val();
-        var password = $('#password').val();
+    initTypeahead: function() {
+        $('#search').typeahead({
+            source: function(query, process) {
+                process(['aaa', 'bbb']);
+            }
+        });
+    },
 
-        if (nickname && password) {
-            $.ajax({
-                url: "rest/user/login",
-                async: false,
-                type: "GET",
-                data: {
-                    'nickname': nickname,
-                    'password': password
-                },
-                accepts: {
-                    text: "application/json"
-                },
-                contentType:"application/json; charset=utf-8",
-                dataType:"text",
-                success: function( data ) {
-                    $('#user').text(nickname);
-                    token=data;
-                    $.cookie("session", data);
-                    $.cookie("user", nickname);
+    initDatagrid: function() {
+        var dataSource = {
+            columns: function () {
+                return [
+                    { property: 'priority', label: 'Priority', sortable: true },
+                    { property: 'title', label: 'Title', sortable: false },
+                    { property: 'date', label: 'Due Date', sortable: true },
+                    { property: 'description', label: 'Description', sortable: false },
+                    { property: 'completed', label: 'Completed', sortable: false}
+                ];
+            },
+            data: function (options, callback) {
+                setTimeout(function () {
+                    var startIndex = options.pageIndex * options.pageSize;
+                    var endIndex = startIndex + options.pageSize;
 
-                    $('#search').typeahead({
-                        name: 'titles',
-                        remote: 'rest/item/suggest/?text=%QUERY&token='+token
-                    });
+                    var params = {
+                        'text': ((options.search) ? (options.search) : '') + '*',
+                        'start': startIndex,
+                        'size': options.pageSize,
+                        'sort': (options.sortDirection) ? options.sortDirection : 'asc',
+                        'sortBy': (options.sortProperty) ? options.sortProperty : 'date',
+                        'token': todo.token
+                    };
 
-                    $('#MyGrid').datagrid('reload');
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    Hint.show(errorThrown);
-                }
-            });
-        }
-        if (!token) {
-            Hint.show("Need to Sign In first");
-            $('#myModal').modal('show');
-        }
-    })
-
-    if (!token)
-        $('#myModal').modal('show');
-
-    // INITIALIZING THE DATAGRID
-    var dataSource = {
-        columns: function () {
-            return [
-                {
-                    property: 'priority',
-                    label: 'Priority',
-                    sortable: true
-                },
-                {
-                    property: 'title',
-                    label: 'Title',
-                    sortable: false
-                },
-                {
-                    property: 'date',
-                    label: 'Due Date',
-                    sortable: true
-                },
-                {
-                    property: 'description',
-                    label: 'Description',
-                    sortable: false
-                },
-                {
-                    property: 'completed',
-                    label: 'Completed',
-                    sortable: false
-                }
-            ];
-        },
-        data: function (options, callback) {
-            var self = this;
-
-            setTimeout(function () {
-                var data = $.extend(true, [], self._data);
-
-                // PAGING
-                var startIndex = options.pageIndex * options.pageSize;
-                var endIndex = startIndex + options.pageSize;
-
-                token = $.cookie("session");
-
-                var params = {
-                    'text': ((options.search) ? (options.search) : '') +'*',
-                    'start': startIndex,
-                    'size': options.pageSize,
-                    'sort': (options.sortDirection) ? options.sortDirection : 'asc',
-                    'sortBy': (options.sortProperty) ? options.sortProperty : 'date',
-                    'token': token
-                };
-
-                if (options.filter) {
-                    if (options.filter.value == 'completed')
-                        params.completed = true;
-                    if (options.filter.value == 'notCompleted')
-                        params.completed = false;
-                }
-
-                $.ajax({
-                    url: "rest/item/filter",
-                    async: false,
-                    type: "GET",
-                    data: params,
-                    accepts: {
-                        text: "application/json"
-                    },
-                    contentType:"application/json; charset=utf-8",
-                    dataType:"json",
-                    success: function( items ) {
-                        $.each(items, function(key, value){
-                            items[key].completed = (value.completed) ? 'Yes' : 'No';
-                            var date = new Date(value.date);
-                            items[key].date = date.getFullYear() + " / " +date.getMonth() + " / " + date.getDate();
-                        });
-                        data = items;
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        Hint.show(errorThrown);
+                    if (options.filter) {
+                        if (options.filter.value == 'completed')
+                            params.completed = true;
+                        if (options.filter.value == 'notCompleted')
+                            params.completed = false;
                     }
-                });
 
-                var count = data.length;
+                    var data = todo.ajaxFilter(params);
 
-                // PAGING
-                var end = (endIndex > count) ? count : endIndex;
-                var pages = Math.ceil(count / options.pageSize);
-                var page = options.pageIndex + 1;
-                var start = startIndex + 1;
+                    var count = data.length;
+                    var end = (endIndex > count) ? count : endIndex;
+                    var pages = Math.ceil(count / options.pageSize);
+                    var page = options.pageIndex + 1;
+                    var start = startIndex + 1;
 
-                callback({ data: data, start: start, end: end, count: count, pages: pages, page: page });
+                    callback({ data: data, start: start, end: end, count: count, pages: pages, page: page });
 
-            }, this._delay)
+                }, this._delay)
+            }
         }
+
+        $('#MyGrid').datagrid({
+            dataSource: dataSource,
+            stretchHeight: true
+        });
+
+        $('#datagrid-reload').on('click', function () {
+            $('#MyGrid').datagrid('reload');
+        });
+    },
+
+    ajaxFilter: function(params) {
+        var result = null;
+        $.ajax({
+            url: "rest/item/filter",
+            async: false,
+            type: "GET",
+            data: params,
+            accepts: {
+                text: "application/json"
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (items) {
+                $.each(items, function (key, value) {
+                    items[key].completed = (value.completed) ? 'Yes' : 'No';
+                    var date = new Date(value.date);
+                    items[key].date = date.getFullYear() + " / " + date.getMonth() + " / " + date.getDate();
+                });
+                result = items;
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                Hint.show(errorThrown);
+            }
+        });
+        return result;
+    },
+
+    ajaxLogin: function(nickname, password) {
+        var token = null;
+        $.ajax({
+            url: "rest/user/login",
+            async: false,
+            type: "GET",
+            data: {
+                'nickname': nickname,
+                'password': password
+            },
+            accepts: {
+                text: "application/json"
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            success: function (data) {
+                $('#user').text(nickname);
+                token = data;
+                $.cookie("session", data);
+                $.cookie("user", nickname);
+
+                $('#MyGrid').datagrid('reload');
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                Hint.show(errorThrown);
+            }
+        });
+        return token;
     }
-
-    $('#MyGrid').datagrid({
-        dataSource: dataSource,
-        stretchHeight: true
-    });
-
-    $('#datagrid-reload').on('click', function () {
-        $('#MyGrid').datagrid('reload');
-    });
-});
+}

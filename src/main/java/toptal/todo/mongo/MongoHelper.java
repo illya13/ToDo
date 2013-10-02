@@ -15,11 +15,9 @@ public class MongoHelper {
     @Autowired
     MongoTemplate mongoTemplate;
 
-    public List<TodoItem> findItemInSorted(List<String> ids, Boolean completed, String sort, String sortBy) {
+    public List<TodoItem> findItemInSorted(List<String> ids, String sort, String sortBy) {
         Sort.Direction direction = Sort.Direction.fromString(sort);
         Criteria criteria = Criteria.where("_id").in(ids);
-        if (completed != null)
-            criteria = criteria.and("completed").is(completed);
         Query query = new Query(criteria);
         query.with(new Sort(direction, sortBy));
         return mongoTemplate.find(query, TodoItem.class);

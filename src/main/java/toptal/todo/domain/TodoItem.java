@@ -93,6 +93,7 @@ public class TodoItem {
                 field("user", item.getUser().getNickname()).
                 field("title", item.getTitle()).
                 field("description", item.getDescription()).
+                field("completed", item.isCompleted()).
                 endObject();
     }
 }
