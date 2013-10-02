@@ -76,7 +76,6 @@ var todo = {
         $('#prioritySpinner').spinner('value', 1);
 
         $('#newItemDlg .input-append.date').datepicker({
-            startDate: 0,
             todayBtn: "linked",
             autoclose: true,
             todayHighlight: true
