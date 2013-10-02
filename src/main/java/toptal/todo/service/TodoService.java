@@ -40,6 +40,10 @@ public class TodoService {
         return todoItem;
     }
 
+    public long getCountOfAllTodoItems() {
+        return todoItemRepository.count();
+    }
+
     public List<TodoItem> getAllTodoItems() {
         return todoItemRepository.findAll();
     }

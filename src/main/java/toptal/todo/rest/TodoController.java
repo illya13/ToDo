@@ -34,7 +34,15 @@ public class TodoController {
         sessionService.validateToken(token);
         User user = userService.getUserByNickname(nickname);
         todoItem.setUser(user);
-        return todoService.createTodoItem(todoItem);
+        todoItem = todoService.createTodoItem(todoItem);
+
+        // wait to allow elastic to index
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ie) {
+            // do nothing
+        }
+        return todoItem;
     }
 
     @RequestMapping(value = "/item/{id}", method = RequestMethod.GET, produces = "application/json")
@@ -43,6 +51,14 @@ public class TodoController {
         logger.info("getTodoItemById, id=" + id + "token="+token);
         sessionService.validateToken(token);
         return todoService.getTodoItemById(id);
+    }
+
+    @RequestMapping(value = "/count/item", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public Long getCountOfTodoItems(@RequestParam String token) {
+        logger.info("getCountOfTodoItems, token="+token);
+        sessionService.validateToken(token);
+        return todoService.getCountOfAllTodoItems();
     }
 
     @RequestMapping(value = "/item/{id}", method = RequestMethod.POST, produces = "application/json")

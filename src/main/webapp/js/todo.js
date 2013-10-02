@@ -1,5 +1,6 @@
 var todo = {
     token: null,
+    totalCount: 0,
 
     init: function () {
         todo.initTypeahead();
@@ -7,16 +8,24 @@ var todo = {
         todo.initHint();
         todo.initLogout();
         todo.initLogin();
+        todo.initNewItem();
+        todo.initNewItemDlg();
 
         todo.token = $.cookie("session");
-        if (todo.token)
+        if (todo.token) {
+            todo.totalCount = todo.ajaxCount();
             todo.setUser($.cookie("user"));
+        }
         else
             todo.doLogin();
     },
 
     doLogin: function() {
         $('#login').modal('show');
+    },
+
+    doNewItem: function() {
+        $('#newItemDlg').modal('show');
     },
 
     setUser: function(nickname) {
@@ -48,11 +57,41 @@ var todo = {
             }
             if (todo.token) {
                 todo.setUser(nickname);
+                todo.totalCount = todo.ajaxCount();
                 todo.reloadDatagrid();
             } else {
                 Hint.show("Need to Sign In first");
                 todo.doLogin();
             }
+        })
+    },
+
+    initNewItem: function() {
+        $("#newItem").on("click", function () {
+            todo.doNewItem();
+        });
+    },
+
+    initNewItemDlg: function() {
+        $('#prioritySpinner').spinner('value', 1);
+
+        $('#newItemDlg .input-append.date').datepicker({
+            startDate: 0,
+            todayBtn: "linked",
+            autoclose: true,
+            todayHighlight: true
+        });
+
+        $('#newItemDlg').on('hidden.bs.modal', function () {
+            var item = {
+                priority: $('#prioritySpinner').spinner('value'),
+                title: $('#title').val(),
+                date: $('#newItemDlg .input-append.date').datepicker('getDate').getTime(),
+                description: $('#description').val(),
+                completed: false
+            };
+            todo.ajaxNewItem(item, $.cookie("user"));
+            todo.totalCount = todo.ajaxCount();
         })
     },
 
@@ -105,13 +144,12 @@ var todo = {
 
                     var data = todo.ajaxFilter(params);
 
-                    var count = data.length;
-                    var end = (endIndex > count) ? count : endIndex;
-                    var pages = Math.ceil(count / options.pageSize);
+                    var end = (endIndex > todo.totalCount) ?  todo.totalCount : endIndex;
+                    var pages = Math.ceil( todo.totalCount / options.pageSize);
                     var page = options.pageIndex + 1;
                     var start = startIndex + 1;
 
-                    callback({ data: data, start: start, end: end, count: count, pages: pages, page: page });
+                    callback({ data: data, start: start, end: end, count:  todo.totalCount, pages: pages, page: page });
 
                 }, this._delay)
             }
@@ -147,7 +185,7 @@ var todo = {
                 $.each(items, function (key, value) {
                     items[key].completed = (value.completed) ? 'Yes' : 'No';
                     var date = new Date(value.date);
-                    items[key].date = date.getFullYear() + " / " + date.getMonth() + " / " + date.getDate();
+                    items[key].date =  date.getDate() + "/" + (date.getMonth()+1) + "/" +  + date.getFullYear();
                     items[key].user = value.user.fullname;
                 });
                 result = items;
@@ -214,7 +252,7 @@ var todo = {
             async: false,
             type: "GET",
             data: {
-                text: query,
+                'text': query,
                 'token': todo.token
             },
             accepts: {
@@ -229,7 +267,54 @@ var todo = {
                 Hint.show(errorThrown);
             }
         });
+    },
+
+    ajaxCount: function() {
+        var count = 0;
+        $.ajax({
+            url: "rest/count/item",
+            async: false,
+            type: "GET",
+            data: {
+                'token': todo.token
+            },
+            accepts: {
+                text: "application/json"
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (cnt) {
+                count = cnt;
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                Hint.show(errorThrown);
+            }
+        });
+        return count;
+    },
+
+    ajaxNewItem: function(item, nickname) {
+        $.ajax({
+            url: "rest/item?nickname="+ nickname + '&token='+ todo.token,
+            async: false,
+            type: "POST",
+            data: JSON.stringify(item),
+            accepts: {
+                text: "application/json"
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (item) {
+                todo.reloadDatagrid();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                Hint.show(errorThrown);
+            }
+        });
     }
+
+
+
 
 
 }

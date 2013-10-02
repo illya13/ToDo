@@ -11,7 +11,7 @@ public class SessionService {
     @Autowired
     SessionRepository sessionRepository;
 
-    public static final int expireMinutes = 5;
+    public static final int expireMinutes = 15;
 
     public SessionService() {
     }
