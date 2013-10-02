@@ -5,6 +5,7 @@ ToDo
 ToDO Web App for Toptal
 
 [Live demo version](http://188.40.140.195:8080/todo/)
+
 *Users to login:*
 - toptal / toptal
 - illya / illya
