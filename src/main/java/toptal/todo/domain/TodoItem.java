@@ -90,7 +90,7 @@ public class TodoItem {
     public static XContentBuilder getXContentBuilder(TodoItem item) throws IOException {
         return jsonBuilder().
                 startObject().
-                field("user", item.getUser().getNickname()).
+                field("user", item.getUser().getFullname()).
                 field("title", item.getTitle()).
                 field("description", item.getDescription()).
                 field("completed", item.isCompleted()).
