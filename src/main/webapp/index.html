@@ -58,105 +58,105 @@ require(['jquery', 'jquery.cookie', 'fuelux/all', 'hint', 'todo'], function() {
 
 <div class="container">
 
-<div class="hero-unit">
-    <p>ToDO Web App for Toptal</p>
-</div>
+    <div class="hero-unit">
+        <p>ToDO Web App for Toptal</p>
+    </div>
 
-<h2>ToDo Items</h2>
+    <h2>ToDo Items</h2>
 
-<div class="datagrid-example">
-    <div style="height:400px;width:100%;margin-bottom:20px;">
-        <table id="MyGrid" class="table table-bordered datagrid">
+    <div class="datagrid-example">
+        <div style="height:400px;width:100%;margin-bottom:20px;">
+            <table id="MyGrid" class="table table-bordered datagrid">
 
-            <thead>
-            <tr>
-                <th>
-                    <span class="datagrid-header-title"></span>
+                <thead>
+                <tr>
+                    <th>
+                        <span class="datagrid-header-title"></span>
 
-                    <div class="datagrid-header-left">
-                        <div class="input-append search datagrid-search">
-                            <input id="search" type="text" class="input-medium" data-provide="typeahead" autocomplete="off" placeholder="Search">
-                            <button type="button" class="btn"><i class="icon-search"></i></button>
+                        <div class="datagrid-header-left">
+                            <div class="input-append search datagrid-search">
+                                <input id="search" type="text" class="input-medium" data-provide="typeahead" autocomplete="off" placeholder="Search">
+                                <button type="button" class="btn"><i class="icon-search"></i></button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="datagrid-header-right">
-                        <div class="select filter" data-resize="auto">
-                            <button type="button" data-toggle="dropdown" class="btn dropdown-toggle">
-                                <span class="dropdown-label"></span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li data-value="all" data-selected="true"><a href="#">All</a></li>
-                                <li data-value="completed"><a href="#">Completed</a></li>
-                                <li data-value="notCompleted"><a href="#">Not completed</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </th>
-            </tr>
-            </thead>
-
-            <tfoot>
-            <tr>
-                <th>
-                    <div class="datagrid-footer-left" style="display:none;">
-                        <div class="grid-controls">
-										<span>
-											<span class="grid-start"></span> -
-											<span class="grid-end"></span> of
-											<span class="grid-count"></span>
-										</span>
-                            <div class="select grid-pagesize" data-resize="auto">
+                        <div class="datagrid-header-right">
+                            <div class="select filter" data-resize="auto">
                                 <button type="button" data-toggle="dropdown" class="btn dropdown-toggle">
                                     <span class="dropdown-label"></span>
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li data-value="5"><a href="#">5</a></li>
-                                    <li data-value="10" data-selected="true"><a href="#">10</a></li>
-                                    <li data-value="20"><a href="#">20</a></li>
-                                    <li data-value="50"><a href="#">50</a></li>
-                                    <li data-value="100"><a href="#">100</a></li>
+                                    <li data-value="all" data-selected="true"><a href="#">All</a></li>
+                                    <li data-value="completed"><a href="#">Completed</a></li>
+                                    <li data-value="notCompleted"><a href="#">Not completed</a></li>
                                 </ul>
                             </div>
-                            <span>Per Page</span>
                         </div>
-                    </div>
-                    <div class="datagrid-footer-right" style="display:none;">
-                        <div class="grid-pager">
-                            <button type="button" class="btn grid-prevpage"><i class="icon-chevron-left"></i></button>
-                            <span>Page</span>
+                    </th>
+                </tr>
+                </thead>
 
-                            <div class="input-append dropdown combobox">
-                                <input class="span1" type="text">
-                                <button type="button" class="btn" data-toggle="dropdown"><i class="caret"></i></button>
-                                <ul class="dropdown-menu"></ul>
+                <tfoot>
+                <tr>
+                    <th>
+                        <div class="datagrid-footer-left" style="display:none;">
+                            <div class="grid-controls">
+                                            <span>
+                                                <span class="grid-start"></span> -
+                                                <span class="grid-end"></span> of
+                                                <span class="grid-count"></span>
+                                            </span>
+                                <div class="select grid-pagesize" data-resize="auto">
+                                    <button type="button" data-toggle="dropdown" class="btn dropdown-toggle">
+                                        <span class="dropdown-label"></span>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li data-value="5"><a href="#">5</a></li>
+                                        <li data-value="10" data-selected="true"><a href="#">10</a></li>
+                                        <li data-value="20"><a href="#">20</a></li>
+                                        <li data-value="50"><a href="#">50</a></li>
+                                        <li data-value="100"><a href="#">100</a></li>
+                                    </ul>
+                                </div>
+                                <span>Per Page</span>
                             </div>
-                            <span>of <span class="grid-pages"></span></span>
-                            <button type="button" class="btn grid-nextpage"><i class="icon-chevron-right"></i></button>
                         </div>
-                    </div>
-                </th>
-            </tr>
-            </tfoot>
+                        <div class="datagrid-footer-right" style="display:none;">
+                            <div class="grid-pager">
+                                <button type="button" class="btn grid-prevpage"><i class="icon-chevron-left"></i></button>
+                                <span>Page</span>
 
-        </table>
+                                <div class="input-append dropdown combobox">
+                                    <input class="span1" type="text">
+                                    <button type="button" class="btn" data-toggle="dropdown"><i class="caret"></i></button>
+                                    <ul class="dropdown-menu"></ul>
+                                </div>
+                                <span>of <span class="grid-pages"></span></span>
+                                <button type="button" class="btn grid-nextpage"><i class="icon-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+                </tfoot>
+
+            </table>
+        </div>
     </div>
-</div>
 
-<input type="button" class="btn" id="datagrid-reload" value="reload">
+    <input type="button" class="btn" id="datagrid-reload" value="reload">
 
-<hr>
-<footer>
-    <p class="pull-right"><a href="https://github.com/illya13/ToDo">GitHub</a></p>
-    <p>&copy; 2013, by Illya Havsiyevych</p>
-</footer>
+    <hr>
+    <footer>
+        <p class="pull-right"><a href="https://github.com/illya13/ToDo">GitHub</a></p>
+        <p>&copy; 2013, by Illya Havsiyevych</p>
+    </footer>
 
-<div class="bb-alert alert alert-info" style="display:none;">
-    <span>The examples populate this alert with dummy content</span>
-</div>
+    <div class="bb-alert alert alert-info" style="display:none;">
+        <span>The examples populate this alert with dummy content</span>
+    </div>
 
-    <div id="myModal" class="modal hide fade" style="width: 250px; margin-left: -130px;" data-backdrop="static" data-keyboard="true">
+    <div id="login" class="modal hide fade" style="width: 250px; margin-left: -130px;" data-backdrop="static" data-keyboard="true">
         <div class="modal-header">
             <h3>Please Sign In</h3>
         </div>

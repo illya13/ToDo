@@ -16,7 +16,7 @@ var todo = {
     },
 
     doLogin: function() {
-        $('#myModal').modal('show');
+        $('#login').modal('show');
     },
 
     setUser: function(nickname) {
@@ -36,7 +36,7 @@ var todo = {
     },
 
     initLogin: function() {
-        $('#myModal').on('hidden.bs.modal', function () {
+        $('#login').on('hidden.bs.modal', function () {
             var nickname = $('#nickname').val();
             var password = $('#password').val();
 
@@ -45,7 +45,7 @@ var todo = {
             }
             if (!todo.token) {
                 Hint.show("Need to Sign In first");
-                $('#myModal').modal('show');
+                $('#login').modal('show');
             }
         })
     },
@@ -72,6 +72,7 @@ var todo = {
                     { property: 'title', label: 'Title', sortable: false },
                     { property: 'date', label: 'Due Date', sortable: true },
                     { property: 'description', label: 'Description', sortable: false },
+                    { property: 'user', label: 'User', sortable: false },
                     { property: 'completed', label: 'Completed', sortable: false}
                 ];
             },
@@ -137,6 +138,7 @@ var todo = {
                     items[key].completed = (value.completed) ? 'Yes' : 'No';
                     var date = new Date(value.date);
                     items[key].date = date.getFullYear() + " / " + date.getMonth() + " / " + date.getDate();
+                    items[key].user = value.user.fullname;
                 });
                 result = items;
             },
