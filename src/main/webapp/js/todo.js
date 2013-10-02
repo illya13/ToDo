@@ -169,9 +169,10 @@ var todo = {
     },
 
     generateLinks: function(id, completed) {
-        return '<a href="#" onClick="return todo.toggle(\''+id+'\');">' +
-                ((completed) ? 'Yes' : 'No') +
-            '</a>&nbsp;/&nbsp;<a href="#" onClick="return todo.delete(\''+id+'\');">Delete</a>';
+        return '<div align="center"><a href="#" onClick="return todo.toggle(\''+id+'\');"><i class="' +
+                ((completed) ? 'icon-ok' : 'icon-minus') +
+            '"></i></a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="#" onClick="return todo.delete(\''+id+
+            '\');"><i class="icon-trash"></i></a></div>';
     },
 
     delete: function(id) {

@@ -50,7 +50,7 @@ require(['jquery', 'jquery.cookie', 'fuelux/all', 'bootstrap-datepicker', 'hint'
                 </ul>
                 <ul class="nav pull-right">
                     <li><p id="user" class="navbar-text"></p></li>
-                    <li><a id="logout" href="#">Logout</a></li>
+                    <li><a id="logout" href="#">Login / Logout</a></li>
                 </ul>
             </div>
         </div>
@@ -60,7 +60,12 @@ require(['jquery', 'jquery.cookie', 'fuelux/all', 'bootstrap-datepicker', 'hint'
 <div class="container">
 
     <div class="hero-unit">
-        <p>ToDO Web App for Toptal</p>
+        <p>Application status:
+            <ul>
+                <li>no EDIT of an item</li>
+                <li>no special high-lighting of completed items</li>
+            </ul>
+        </p>
     </div>
 
     <h2>ToDo Items</h2>
@@ -68,7 +73,6 @@ require(['jquery', 'jquery.cookie', 'fuelux/all', 'bootstrap-datepicker', 'hint'
     <div>
         <div style="height:514px;width:100%;margin-bottom:20px;">
             <table id="itemsGrid" class="table table-bordered datagrid">
-
                 <thead>
                 <tr>
                     <th>
