@@ -41,6 +41,9 @@ ElasticSearch
 {
       "item" : {
           "properties" : {
+              "completed": {
+                  "type": "boolean"
+              },
               "description" : {
                   "type" : "string"
               },
@@ -68,3 +71,8 @@ ElasticSearch
 }
 ````
 
+- get /post mapping
+
+```javascript
+http://localhost:9200/todo/item/_mapping
+````
