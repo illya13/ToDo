@@ -32,6 +32,8 @@ REST API:
 - **DELETE** [/item/{id}]() - delete ToDo item with *id*
 - **GET** [/item/filter]() - get filtered ToDo items sorted by Date, Priority
 - **GET** [/item/suggest]() - get suggests based on ToDo item Titles
+- **GET** [/count/item]() - get all items count
+- **POST** [/item/{id}/toggle]() - toggle completion status
 
 ElasticSearch
 =============
