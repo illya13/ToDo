@@ -59,6 +59,19 @@ public class TodoService {
         return item;
     }
 
+    public TodoItem toggleTodoItem(String id) {
+        TodoItem item = todoItemRepository.findOne(id);
+        item.setCompleted(!item.isCompleted());
+        item = todoItemRepository.save(item);
+        try {
+            esHelper.reindex(item);
+        } catch (IOException ioe) {
+            // do nothing
+            throw new IllegalStateException(ioe);
+        }
+        return item;
+    }
+
     public void deleteTodoItem(String id) {
         todoItemRepository.delete(id);
         esHelper.delete(id);

@@ -168,6 +168,23 @@ var todo = {
         $('#itemsGrid').datagrid('reload');
     },
 
+    generateLinks: function(id, completed) {
+        return '<a href="#" onClick="return todo.toggle(\''+id+'\');">' +
+                ((completed) ? 'Yes' : 'No') +
+            '</a>&nbsp;/&nbsp;<a href="#" onClick="return todo.delete(\''+id+'\');">Delete</a>';
+    },
+
+    delete: function(id) {
+        todo.ajaxDelete(id);
+        todo.totalCount = todo.ajaxCount();
+        todo.reloadDatagrid();
+    },
+
+    toggle: function(id) {
+        todo.ajaxToggle(id);
+        todo.reloadDatagrid();
+    },
+
     ajaxFilter: function(params) {
         var result = null;
         $.ajax({
@@ -182,7 +199,7 @@ var todo = {
             dataType: "json",
             success: function (items) {
                 $.each(items, function (key, value) {
-                    items[key].completed = (value.completed) ? 'Yes' : 'No';
+                    items[key].completed = todo.generateLinks(value.id, value.completed);
                     var date = new Date(value.date);
                     items[key].date =  date.getDate() + "/" + (date.getMonth()+1) + "/" +  + date.getFullYear();
                     items[key].user = value.user.fullname;
@@ -292,6 +309,51 @@ var todo = {
         return count;
     },
 
+    ajaxDelete: function(id) {
+        var count = 0;
+        $.ajax({
+            url: "rest/item/"+id +"?token="+ todo.token,
+            async: false,
+            type: "DELETE",
+            data: {},
+            accepts: {
+                text: "application/json"
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function () {
+                Hint.show("deleted");
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                Hint.show(errorThrown);
+            }
+        });
+        return count;
+    },
+
+    ajaxToggle: function(id) {
+        var count = 0;
+        $.ajax({
+            url: "rest/item/"+id +"/toggle?token="+ todo.token,
+            async: false,
+            type: "POST",
+            data: {
+            },
+            accepts: {
+                text: "application/json"
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (item) {
+                Hint.show((item.completed) ? "Completed" : "Uncompleted");
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                Hint.show(errorThrown);
+            }
+        });
+        return count;
+    },
+
     ajaxNewItem: function(item, nickname) {
         $.ajax({
             url: "rest/item?nickname="+ nickname + '&token='+ todo.token,
@@ -311,9 +373,4 @@ var todo = {
             }
         });
     }
-
-
-
-
-
 }

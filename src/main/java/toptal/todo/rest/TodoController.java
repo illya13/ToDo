@@ -26,6 +26,15 @@ public class TodoController {
     @Autowired
     private UserService userService;
 
+    private void sleep() {
+        // wait to allow elastic to index
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ie) {
+            // do nothing
+        }
+    }
+
     @RequestMapping(value = "/item", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
@@ -35,13 +44,7 @@ public class TodoController {
         User user = userService.getUserByNickname(nickname);
         todoItem.setUser(user);
         todoItem = todoService.createTodoItem(todoItem);
-
-        // wait to allow elastic to index
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ie) {
-            // do nothing
-        }
+        sleep();
         return todoItem;
     }
 
@@ -66,7 +69,19 @@ public class TodoController {
     public TodoItem updateTodoItemById(@RequestBody TodoItem item, @PathVariable String id, @RequestParam String token) {
         logger.info("updateTodoItemById, id=" + id + "token="+token);
         sessionService.validateToken(token);
-        return todoService.updateTodoItem(item);
+        item = todoService.updateTodoItem(item);
+        sleep();
+        return item;
+    }
+
+    @RequestMapping(value = "/item/{id}/toggle", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public TodoItem toggleTodoItemById(@PathVariable String id, @RequestParam String token) {
+        logger.info("toggleTodoItemById, id=" + id + "token="+token);
+        sessionService.validateToken(token);
+        TodoItem item = todoService.toggleTodoItem(id);
+        sleep();
+        return item;
     }
 
     @RequestMapping(value = "/item", method = RequestMethod.GET, produces = "application/json")
@@ -83,6 +98,7 @@ public class TodoController {
         logger.info("deleteTodoItemById, id=" + id + ", token="+token);
         sessionService.validateToken(token);
         todoService.deleteTodoItem(id);
+        sleep();
     }
 
     @RequestMapping(value = "/item/suggest", method = RequestMethod.GET, produces = "application/json")
