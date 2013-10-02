@@ -20,7 +20,10 @@ var todo = {
     },
 
     setUser: function(nickname) {
-        $('#user').text(nickname);
+        if (nickname)
+            todo.ajaxUser(nickname);
+        else
+            $('#user').text('');
     },
 
     initLogout: function() {
@@ -29,7 +32,7 @@ var todo = {
             $.removeCookie("user");
 
             todo.token = null;
-            todo.setUser('');
+            todo.setUser(null);
 
             todo.doLogin();
         });
@@ -43,9 +46,12 @@ var todo = {
             if (nickname && password) {
                 todo.token = todo.ajaxLogin(nickname, password);
             }
-            if (!todo.token) {
+            if (todo.token) {
+                todo.setUser(nickname);
+                todo.reloadDatagrid();
+            } else {
                 Hint.show("Need to Sign In first");
-                $('#login').modal('show');
+                todo.doLogin();
             }
         })
     },
@@ -59,7 +65,7 @@ var todo = {
     initTypeahead: function() {
         $('#search').typeahead({
             source: function(query, process) {
-                process(['aaa', 'bbb']);
+                todo.ajaxSuggest(query, process);
             }
         });
     },
@@ -111,14 +117,18 @@ var todo = {
             }
         }
 
-        $('#MyGrid').datagrid({
+        $('#itemsGrid').datagrid({
             dataSource: dataSource,
             stretchHeight: true
         });
 
         $('#datagrid-reload').on('click', function () {
-            $('#MyGrid').datagrid('reload');
+            todo.reloadDatagrid();
         });
+    },
+
+    reloadDatagrid: function() {
+        $('#itemsGrid').datagrid('reload');
     },
 
     ajaxFilter: function(params) {
@@ -165,17 +175,61 @@ var todo = {
             contentType: "application/json; charset=utf-8",
             dataType: "text",
             success: function (data) {
-                $('#user').text(nickname);
                 token = data;
                 $.cookie("session", data);
                 $.cookie("user", nickname);
-
-                $('#MyGrid').datagrid('reload');
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 Hint.show(errorThrown);
             }
         });
         return token;
+    },
+
+    ajaxUser: function(nickname) {
+        $.ajax({
+            url: "rest/user/" + nickname,
+            async: false,
+            type: "GET",
+            data: {
+                'token': todo.token
+            },
+            accepts: {
+                text: "application/json"
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (user) {
+                $('#user').text(user.fullname);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                Hint.show(errorThrown);
+            }
+        });
+    },
+
+    ajaxSuggest: function(query, callback) {
+        $.ajax({
+            url: "rest/item/suggest",
+            async: false,
+            type: "GET",
+            data: {
+                text: query,
+                'token': todo.token
+            },
+            accepts: {
+                text: "application/json"
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (suggest) {
+                callback(suggest);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                Hint.show(errorThrown);
+            }
+        });
     }
+
+
 }
