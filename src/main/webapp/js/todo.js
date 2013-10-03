@@ -120,7 +120,7 @@ var todo = {
             todayHighlight: true
         });
 
-        $('#newItemDlg').on('hidden.bs.modal', function () {
+        $("#create").on("click", function () {
             var item = {
                 priority: $('#prioritySpinner').spinner('value'),
                 title: $('#title').val(),
@@ -140,7 +140,7 @@ var todo = {
             todayHighlight: true
         });
 
-        $('#updateItemDlg').on('hidden.bs.modal', function () {
+        $("#update").on("click", function () {
             todo.updatingItem.priority = $('#uPrioritySpinner').spinner('value');
             todo.updatingItem.title = $('#uTitle').val();
             todo.updatingItem.date = $('#updateItemDlg .input-append.date').datepicker('getDate').getTime();
