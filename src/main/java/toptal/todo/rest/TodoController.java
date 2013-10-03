@@ -67,7 +67,7 @@ public class TodoController {
     @RequestMapping(value = "/item/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public TodoItem updateTodoItemById(@RequestBody TodoItem item, @PathVariable String id, @RequestParam String token) {
-        logger.info("updateTodoItemById, id=" + id + "token="+token);
+        logger.info("updateTodoItemById, id=" + id + ", token="+token);
         sessionService.validateToken(token);
         item = todoService.updateTodoItem(item);
         sleep();

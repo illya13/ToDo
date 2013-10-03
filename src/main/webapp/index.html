@@ -50,6 +50,7 @@ require(['jquery', 'jquery.cookie', 'fuelux/all', 'bootstrap-datepicker', 'hint'
                 </ul>
                 <ul class="nav pull-right">
                     <li><p id="user" class="navbar-text"></p></li>
+                    <li><a id="register" href="#">Register</a></li>
                     <li><a id="logout" href="#">Login / Logout</a></li>
                 </ul>
             </div>
@@ -62,8 +63,7 @@ require(['jquery', 'jquery.cookie', 'fuelux/all', 'bootstrap-datepicker', 'hint'
     <div class="hero-unit">
         <p>Web GUI status:
             <ul>
-                <li>no Users management</li>
-                <li>no EDIT of an Item</li>
+                <li>only user registration</li>
                 <li>no special high-lighting of completed Items</li>
             </ul>
         </p>
@@ -158,10 +158,12 @@ require(['jquery', 'jquery.cookie', 'fuelux/all', 'bootstrap-datepicker', 'hint'
         <p>&copy; 2013, by Illya Havsiyevych</p>
     </footer>
 
+    <!-- hint -->
     <div class="bb-alert alert alert-info" style="display:none;">
         <span>The examples populate this alert with dummy content</span>
     </div>
 
+    <!-- modals -->
     <div id="login" class="modal hide fade" style="width: 250px; margin-left: -130px;" data-backdrop="static" data-keyboard="true">
         <div class="modal-header">
             <h3>Please Sign In</h3>
@@ -171,7 +173,23 @@ require(['jquery', 'jquery.cookie', 'fuelux/all', 'bootstrap-datepicker', 'hint'
             <input id="password" type="password" class="form-control" placeholder="Password">
         </div>
         <div class="modal-footer">
+            <a id="lRegister" href="#" class="btn" data-dismiss="modal">Register</a>
             <a href="#" class="btn btn-primary" data-dismiss="modal">Sign In</a>
+        </div>
+    </div>
+
+    <div id="registerDlg" class="modal hide fade" style="width: 250px; margin-left: -130px;" data-backdrop="static" data-keyboard="true">
+        <div class="modal-header">
+            <h3>New User Registration</h3>
+        </div>
+        <div class="modal-body">
+            <input id="rNickname" type="text" class="form-control" placeholder="Nickname" autofocus>
+            <input id="rFullname" type="text" class="form-control" placeholder="Full Name" autofocus>
+            <input id="rPassword" type="password" class="form-control" placeholder="Password">
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a id="rRegister" href="#" class="btn btn-primary" data-dismiss="modal">Register Me</a>
         </div>
     </div>
 
@@ -203,6 +221,36 @@ require(['jquery', 'jquery.cookie', 'fuelux/all', 'bootstrap-datepicker', 'hint'
             <a href="#" class="btn btn-primary" data-dismiss="modal">Create</a>
         </div>
     </div>
+
+    <div id="updateItemDlg" class="modal hide fade" data-backdrop="static" data-keyboard="true">
+        <div class="modal-header">
+            <h3>Update Item</h3>
+        </div>
+        <div class="modal-body">
+            <div id="uPrioritySpinner" class="spinner">
+                <div class>Priority</div>
+                <input id="uPriority" type="text" class="input-mini spinner-input">
+                <div class="spinner-buttons	btn-group btn-group-vertical">
+                    <button type="button" class="btn spinner-up">
+                        <i class="icon-chevron-up"></i>
+                    </button>
+                    <button type="button" class="btn spinner-down">
+                        <i class="icon-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+            <input id="uTitle" type="text" class="form-control" placeholder="Title" autofocus>
+            <div class>Date</div>
+            <div class="input-append date">
+                <input id="uItemDate" type="text" class="span2"><span class="add-on"><i class="icon-th"></i></span>
+            </div>
+            <input id="uDescription" type="text" class="form-control" style="width: 400px" placeholder="Description">
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn btn-primary" data-dismiss="modal">Update</a>
+        </div>
+    </div>
+
 </div>
 
 </body>

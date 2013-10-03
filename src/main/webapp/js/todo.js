@@ -1,15 +1,19 @@
 var todo = {
     token: null,
     totalCount: 0,
+    updatingItem: null,
 
     init: function () {
         todo.initTypeahead();
         todo.initDatagrid();
         todo.initHint();
         todo.initLogout();
+        todo.initRegister();
+        todo.initRegisterDlg();
         todo.initLogin();
         todo.initNewItem();
         todo.initNewItemDlg();
+        todo.initUpdateItemDlg();
 
         todo.token = $.cookie("session");
         if (todo.token) {
@@ -26,6 +30,21 @@ var todo = {
 
     doNewItem: function() {
         $('#newItemDlg').modal('show');
+    },
+
+    doUpdateItem: function(item) {
+        $('#uPrioritySpinner').spinner('value', item.priority);
+        $('#uTitle').val(item.title);
+        var date = new Date();
+        date.setTime(item.date);
+        $('#updateItemDlg .input-append.date').datepicker('setDate', date);
+        $('#uDescription').val(item.description),
+
+        $('#updateItemDlg').modal('show');
+    },
+
+    doRegister: function() {
+        $('#registerDlg').modal('show');
     },
 
     setUser: function(nickname) {
@@ -47,6 +66,26 @@ var todo = {
         });
     },
 
+    initRegister: function() {
+        $("#register").on("click", function () {
+            todo.doRegister();
+        });
+        $("#lRegister").on("click", function () {
+            todo.doRegister();
+        });
+    },
+
+    initRegisterDlg: function() {
+        $("#rRegister").on("click", function () {
+            var user = {
+                nickname: $('#rNickname').val(),
+                fullname: $('#rFullname').val(),
+                password: $('#rPassword').val()
+            };
+            todo.ajaxRegister(user);
+        });
+    },
+
     initLogin: function() {
         $('#login').on('hidden.bs.modal', function () {
             var nickname = $('#nickname').val();
@@ -61,7 +100,7 @@ var todo = {
                 todo.reloadDatagrid();
             } else {
                 Hint.show("Need to Sign In first");
-                todo.doLogin();
+//                todo.doLogin();
             }
         })
     },
@@ -91,6 +130,22 @@ var todo = {
             };
             todo.ajaxNewItem(item, $.cookie("user"));
             todo.totalCount = todo.ajaxCount();
+        })
+    },
+
+    initUpdateItemDlg: function() {
+        $('#updateItemDlg .input-append.date').datepicker({
+            todayBtn: "linked",
+            autoclose: true,
+            todayHighlight: true
+        });
+
+        $('#updateItemDlg').on('hidden.bs.modal', function () {
+            todo.updatingItem.priority = $('#uPrioritySpinner').spinner('value');
+            todo.updatingItem.title = $('#uTitle').val();
+            todo.updatingItem.date = $('#updateItemDlg .input-append.date').datepicker('getDate').getTime();
+            todo.updatingItem.description = $('#uDescription').val();
+            todo.ajaxUpdateItem(todo.updatingItem);
         })
     },
 
@@ -168,6 +223,11 @@ var todo = {
         $('#itemsGrid').datagrid('reload');
     },
 
+    generateEdit: function(id, title) {
+        return '<a href="#" onClick="return todo.edit(\''+id+'\');">' +
+            title + '</a>';
+    },
+
     generateLinks: function(id, completed) {
         return '<div align="center"><a href="#" onClick="return todo.toggle(\''+id+'\');"><i class="' +
                 ((completed) ? 'icon-ok' : 'icon-minus') +
@@ -186,6 +246,11 @@ var todo = {
         todo.reloadDatagrid();
     },
 
+    edit: function(id) {
+        todo.updatingItem = todo.ajaxGetItem(id);
+        todo.doUpdateItem(todo.updatingItem);
+    },
+
     ajaxFilter: function(params) {
         var result = null;
         $.ajax({
@@ -200,6 +265,7 @@ var todo = {
             dataType: "json",
             success: function (items) {
                 $.each(items, function (key, value) {
+                    items[key].title = todo.generateEdit(value.id, value.title);
                     items[key].completed = todo.generateLinks(value.id, value.completed);
                     var date = new Date(value.date);
                     items[key].date =  date.getDate() + "/" + (date.getMonth()+1) + "/" +  + date.getFullYear();
@@ -358,6 +424,70 @@ var todo = {
     ajaxNewItem: function(item, nickname) {
         $.ajax({
             url: "rest/item?nickname="+ nickname + '&token='+ todo.token,
+            async: false,
+            type: "POST",
+            data: JSON.stringify(item),
+            accepts: {
+                text: "application/json"
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (item) {
+                todo.reloadDatagrid();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                Hint.show(errorThrown);
+            }
+        });
+    },
+
+    ajaxRegister: function(user) {
+        $.ajax({
+            url: "rest/user",
+            async: false,
+            type: "POST",
+            data: JSON.stringify(user),
+            accepts: {
+                text: "application/json"
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (user) {
+                Hint.show(user.nickname + " registered");
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                Hint.show(errorThrown);
+            }
+        });
+    },
+
+    ajaxGetItem: function(id) {
+        var item = null;
+        $.ajax({
+            url: "rest/item/" + id,
+            async: false,
+            type: "GET",
+            data: {
+                'token': todo.token
+            },
+            accepts: {
+                text: "application/json"
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (i) {
+                item = i;
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                Hint.show(errorThrown);
+            }
+        });
+        return item;
+    },
+
+    ajaxUpdateItem: function(item) {
+        $.ajax({
+            url: "rest/item/"+ item.id + '?token='+ todo.token,
             async: false,
             type: "POST",
             data: JSON.stringify(item),
