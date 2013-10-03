@@ -8,14 +8,18 @@ ToDO Web App for Toptal
 
 *Users to login:*
 - toptal / toptal
-- illya / illya
-- root / qwerty
 
 Dependencies:
 =============
-- Spring Framework 3.1.x
-- Jetty 8.1.x
-- full list of dependencies could be found in [pom.xml](pom.xml)
+- Backend
+    - Spring Framework 3.1.x
+    - Jetty 8.1.x
+    - full list of dependencies could be found in [pom.xml](pom.xml)
+- Frontend
+    - Bootstrap 2.3.2
+    - jquery
+    - requirejs
+    - Fuel UX
 
 Runtime Requirements:
 =====================
