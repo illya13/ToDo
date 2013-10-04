@@ -2,12 +2,13 @@ ToDo
 ====
 [![Build Status](https://travis-ci.org/illya13/ToDo.png?branch=master)](https://travis-ci.org/illya13/ToDo)
 
-ToDO Web App for Toptal
+ToDO Web App
 
 [Live demo version](http://188.40.140.195:8080/todo/)
 
 *Users to login:*
-- toptal / toptal
+- illya / illya
+- - or register a new user
 
 Dependencies:
 =============
