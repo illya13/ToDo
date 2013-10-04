@@ -8,7 +8,7 @@ ToDO Web App
 
 *Users to login:*
 - illya / illya
-- - or register a new user
+- or register a new user
 
 Dependencies:
 =============
