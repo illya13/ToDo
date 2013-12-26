@@ -4,7 +4,7 @@ ToDo
 
 ToDO Web App
 
-[Live demo version](http://188.40.140.195:8080/todo/)
+Live demo version - run on request
 
 *Users to login:*
 - illya / illya
@@ -26,8 +26,8 @@ Runtime Requirements:
 =====================
 - Java 6
 - Web Container (tested with Jetty 8.1.x)
-- MongoDB 2.4.x [http://188.40.140.195:27017/](http://188.40.140.195:27017/)
-- ElasticSearch 0.90.5 [http://188.40.140.195:9300/](http://188.40.140.195:9300/)
+- MongoDB 2.4.x 
+- ElasticSearch 0.90.5
 
 REST API:
 =========
